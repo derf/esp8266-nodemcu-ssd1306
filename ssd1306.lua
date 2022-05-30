@@ -44,15 +44,13 @@ function ssd1306.init(width, height)
 	for i, v in ipairs(tab) do
 		ssd1306.wc(v)
 	end
-
-	ssd1306.fb = string.rep("0", width * height / 8)
 end
 
-function ssd1306.show()
+function ssd1306.show(fb)
 	local txbuf = {0x40}
 	for i = 1, ssd1306.w * ssd1306.h / 8, 128 do
 		for j = 0, 127 do
-			txbuf[j+2] = string.byte(ssd1306.fb, i + j)
+			txbuf[j+2] = fb[i+j] or 0
 		end
 		ssd1306.wd(txbuf)
 	end
