@@ -38,12 +38,12 @@ function fb.put(font, c)
 	end
 	local glyph = font.glyphs[c - 31]
 	local fh = font.height/8
-	for i = 1, table.getn(glyph) do
+	for i = 1, string.len(glyph) do
 		local x1 = (i-1) / fh
 		local y8 = (i-1) % fh
-		fb.buf[fb.y/8+y8 + (fb.x+x1) * (fb.h/8) + 1] = glyph[i]
+		fb.buf[fb.y/8+y8 + (fb.x+x1) * (fb.h/8) + 1] = string.byte(glyph, i)
 	end
-	fb.x = fb.x + table.getn(glyph) / fh + 2
+	fb.x = fb.x + string.len(glyph) / fh + 2
 	if fb.x > fb.w then
 		fb.put(font, 10)
 	end
