@@ -55,4 +55,26 @@ function fb.print(font, str)
 	end
 end
 
+function fb.draw_battery_8(x, y, p)
+	fb.buf[y/8 + x*fb.h/8 + 1] = 0xff
+	for i = 1, 10 do
+		if p*2 >= i*15 then
+			fb.buf[y/8 + (x+i)*fb.h/8 + 1] = 0xff
+		else
+			fb.buf[y/8 + (x+i)*fb.h/8 + 1] = 0x81
+		end
+	end
+	if p*2 >= 11*15 then
+		fb.buf[y/8 + (x+11)*fb.h/8 + 1] = 0xff
+	else
+		fb.buf[y/8 + (x+11)*fb.h/8 + 1] = 0xe7
+	end
+	if p*2 >= 12*15 then
+		fb.buf[y/8 + (x+12)*fb.h/8 + 1] = 0x3c
+	else
+		fb.buf[y/8 + (x+12)*fb.h/8 + 1] = 0x24
+	end
+	fb.buf[y/8 + (x+13)*fb.h/8 + 1] = 0x3c
+end
+
 return fb
