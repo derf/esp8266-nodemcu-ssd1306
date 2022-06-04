@@ -46,6 +46,13 @@ function ssd1306.init(width, height)
 	end
 end
 
+function ssd1306.contrast(contrast)
+	local tab = {s_CONTRAST, contrast}
+	for i, v in ipairs(tab) do
+		ssd1306.wc(v)
+	end
+end
+
 function ssd1306.show(fb)
 	local txbuf = {0x40}
 	for i = 1, ssd1306.w * ssd1306.h / 8, 128 do
