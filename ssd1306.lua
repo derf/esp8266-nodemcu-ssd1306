@@ -55,9 +55,13 @@ end
 
 function ssd1306.show(fb)
 	local txbuf = {0x40}
-	for i = 1, ssd1306.w * ssd1306.h / 8, 128 do
-		for j = 0, 127 do
-			txbuf[j+2] = fb[i+j] or 0
+	for i = 1, ssd1306.w * ssd1306.h / 32, 32 do
+		for j = 0, 31 do
+			local dw = fb[i+j] or 0
+			for k = 2, 5 do
+				txbuf[j*4+k] = bit.band(dw, 0xff)
+				dw = bit.rshift(dw, 8)
+			end
 		end
 		ssd1306.wd(txbuf)
 	end

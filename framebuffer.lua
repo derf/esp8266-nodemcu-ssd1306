@@ -16,10 +16,12 @@ end
 
 function fb.scroll()
 	for x = 0, fb.w-1 do
-		for y = 1, fb.h/8-1 do
-			fb.buf[x*(fb.h/8) + y-1 + 1] = fb.buf[x*(fb.h/8) + y + 1] or nil
+		for y = 1, fb.h/32 do
+			fb.buf[x*(fb.h/32) + y-1 + 1] = bit.rshift(fb.buf[x*(fb.h/32) + y-1 + 1] or 0, 8) or nil
+			if y ~= fb.h/32 then
+				fb.buf[x*(fb.h/32) + y-1 + 1] = bit.bor(fb.buf[x*(fb.h/32) + y-1 + 1] or 0, bit.lshift(fb.buf[x*(fb.h/32) + y + 1] or 0, 24)) or nil
+			end
 		end
-		fb.buf[x*(fb.h/8) + fb.h/8] = nil
 	end
 	fb.y = fb.y - 8
 end
@@ -41,7 +43,10 @@ function fb.put(font, c)
 	for i = 1, string.len(glyph) do
 		local x1 = (i-1) / fh
 		local y8 = (i-1) % fh
-		fb.buf[fb.y/8+y8 + (fb.x+x1) * (fb.h/8) + 1] = string.byte(glyph, i)
+		local fb8_o = fb.y/8+y8 + (fb.x+x1) * (fb.h/8)
+		local fb32_o = fb8_o / 4 + 1
+		local fb32_s = (fb8_o % 4) * 8
+		fb.buf[fb32_o] = bit.bor(fb.buf[fb32_o] or 0, bit.lshift(string.byte(glyph, i), fb32_s))
 	end
 	fb.x = fb.x + string.len(glyph) / fh + 2
 	if fb.x > fb.w then
@@ -56,25 +61,25 @@ function fb.print(font, str)
 end
 
 function fb.draw_battery_8(x, y, p)
-	fb.buf[y/8 + x*fb.h/8 + 1] = 0xff
+	fb.buf[y/32 + x*fb.h/32 + 1] = 0xff
 	for i = 1, 10 do
 		if p*2 >= i*15 then
-			fb.buf[y/8 + (x+i)*fb.h/8 + 1] = 0xff
+			fb.buf[y/32 + (x+i)*fb.h/32 + 1] = 0xff
 		else
-			fb.buf[y/8 + (x+i)*fb.h/8 + 1] = 0x81
+			fb.buf[y/32 + (x+i)*fb.h/32 + 1] = 0x81
 		end
 	end
 	if p*2 >= 11*15 then
-		fb.buf[y/8 + (x+11)*fb.h/8 + 1] = 0xff
+		fb.buf[y/32 + (x+11)*fb.h/32 + 1] = 0xff
 	else
-		fb.buf[y/8 + (x+11)*fb.h/8 + 1] = 0xe7
+		fb.buf[y/32 + (x+11)*fb.h/32 + 1] = 0xe7
 	end
 	if p*2 >= 12*15 then
-		fb.buf[y/8 + (x+12)*fb.h/8 + 1] = 0x3c
+		fb.buf[y/32 + (x+12)*fb.h/32 + 1] = 0x3c
 	else
-		fb.buf[y/8 + (x+12)*fb.h/8 + 1] = 0x24
+		fb.buf[y/32 + (x+12)*fb.h/32 + 1] = 0x24
 	end
-	fb.buf[y/8 + (x+13)*fb.h/8 + 1] = 0x3c
+	fb.buf[y/32 + (x+13)*fb.h/32 + 1] = 0x3c
 end
 
 return fb
