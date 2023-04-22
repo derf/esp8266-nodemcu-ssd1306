@@ -3,3 +3,7 @@ Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Files: pixeloperator.lua
 Copyright: 2018 Jayvee Enaguas
 License: CC0-1.0
+
+Files: framebuffer.lua ssd1306.lua
+Copyright: 2022 Daniel Friesel
+License: BSD-2-Clause
