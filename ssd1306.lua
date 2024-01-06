@@ -40,7 +40,7 @@ function ssd1306.init(width, height)
 		s_COM_PIN_CFG, height == 32 and 0x02 or 0x12, s_DISP_CLK_DIV, 0x80,
 		s_PRECHARGE, 0x88, s_VCOM_DESEL, 0x30, s_CONTRAST, 0x80, s_ENTIRE_ON,
 		s_NORM_INV, s_CHARGE_PUMP, 0x14, s_DISP + 0x01, s_COL_ADDR, 0, 127,
-		s_PAGE_ADDR, 0, 7}
+		s_PAGE_ADDR, 0, height/8-1}
 	for i, v in ipairs(tab) do
 		ssd1306.wc(v)
 	end

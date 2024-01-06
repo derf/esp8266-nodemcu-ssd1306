@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 
 Files: framebuffer.lua ssd1306.lua
-Copyright: 2022 Birte Kristina Friesel
+Copyright: 2022-2024 Birte Kristina Friesel
 License: BSD-2-Clause
 
 Files: pixeloperator.lua
